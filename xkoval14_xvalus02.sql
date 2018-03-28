@@ -20,6 +20,7 @@ DROP TABLE ZAMESTNANEC CASCADE CONSTRAINTS;
 DROP TABLE ZANR CASCADE CONSTRAINTS;
 DROP TABLE ZANRY_VE_FILMU CASCADE CONSTRAINTS;
 DROP TABLE HERCI_VE_FILMECH CASCADE CONSTRAINTS;
+DROP TABLE KOUPE CASCADE CONSTRAINTS;
 
 CREATE TABLE  MULTIKINO (
   id_kino INT NOT NULL,
@@ -124,6 +125,8 @@ CREATE TABLE  ZAKAZNIK (
   vernostni_body INT DEFAULT 0
 );
 
+
+
 -- -----------------------------------------------------
 -- Table VSTUPENKA
 -- -----------------------------------------------------
@@ -132,6 +135,7 @@ CREATE TABLE  VSTUPENKA (
   id_vstupenka INT  DEFAULT NULL,
   sedadlo INT NOT NULL,
   vekova_kategorie VARCHAR(20) DEFAULT 'dospely' CHECK( vekova_kategorie  IN ('dite','dospely','senior')),
+  cena int NOT NULL,
   PROJEKCE_id_projekce INT NOT NULL,
   ZAMESTNANEC_id_osoba INT NOT NULL,
   ZAKAZNIK_id_osoba INT NOT NULL,
@@ -173,6 +177,22 @@ CREATE TABLE  HERCI_VE_FILMECH (
 );
 ALTER TABLE HERCI_VE_FILMECH ADD CONSTRAINT FK_HEREC_has_FILM_HEREC1 FOREIGN KEY (HEREC_id_osoba)  REFERENCES OSOBA(id_osoba);
 ALTER TABLE HERCI_VE_FILMECH ADD CONSTRAINT Fk_HEREC_has_FILM_FILM1  FOREIGN KEY (FILM_id_film)    REFERENCES FILM(id_film);
+
+-- -----------------------------------------------------
+-- Table KOUPE
+-- -----------------------------------------------------
+
+CREATE TABLE  KOUPE (
+  id_koupe INT PRIMARY KEY,
+  datum DATE NOT NULL,
+  celkova_cena DECIMAL,
+  prostredek VARCHAR(10) DEFAULT 'eshop' CHECK (prostredek IN('eshop','pokladna')),
+  VSTUPENKA_id_vstupenka INT REFERENCES Vstupenka(id_vstupenka),
+  ZAKAZNIK_id_osoba INT REFERENCES Zakaznik(id_osoba)
+);
+
+
+--trigger na kontrolu emailu
 CREATE OR REPLACE TRIGGER kontrola_mailu
 AFTER INSERT OR UPDATE
 ON OSOBA
@@ -302,16 +322,16 @@ INSERT INTO PROJEKCE(id_projekce,SAL_CISLO_SALU,FILM_ID_FILM,datum,cas,"3D",HFR,
 INSERT INTO PROJEKCE(id_projekce,SAL_CISLO_SALU,FILM_ID_FILM,datum,cas,"3D",HFR,zakladni_cena,cena_dite,cena_senior)
     VALUES (3,2,1,TO_DATE('2018/02/18','yyyy/mm/dd'),TO_TIMESTAMP('20:00','HH24:MI'),'T','F',190,100,120); 
 
-INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
-    VALUES (1,20,'dite',1,6,1); 
+INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,cena,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
+    VALUES (1,20,'dite',190,1,6,1); 
 
-INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
-    VALUES (2,21,'dospely',1,6,1); 
+INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,cena,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
+    VALUES (2,21,'dospely',100,1,6,1); 
     
-INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
-    VALUES (3,55,'dospely',2,6,2);
-INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
-    VALUES (4,56,'dospely',2,6,2);
+INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,cena,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
+    VALUES (3,55,'dospely',190,2,6,2);
+INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,cena,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
+    VALUES (4,56,'dospely',190,2,6,2);
 
 SELECT * FROM SAL;
 SELECT * FROM OSOBA;
