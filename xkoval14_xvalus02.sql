@@ -332,6 +332,3 @@ INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,cena,PROJEKCE_ID_PRO
     VALUES (3,55,'dospely',190,2,6,2);
 INSERT INTO VSTUPENKA(id_vstupenka,sedadlo,vekova_kategorie,cena,PROJEKCE_ID_PROJEKCE,ZAMESTNANEC_ID_OSOBA,ZAKAZNIK_ID_OSOBA)
     VALUES (4,56,'dospely',190,2,6,2);
-
-SELECT * FROM SAL;
-SELECT * FROM OSOBA;
